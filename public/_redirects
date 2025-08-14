@@ -1,0 +1,12 @@
+# Netlify redirects file (backup to netlify.toml)
+# Handle client-side routing
+/*    /index.html   200
+
+# API redirects to serverless functions
+/api/*  /.netlify/functions/:splat  200
+
+# Legacy redirects (if needed)
+/contact  /#contact  301
+/pricing  /#pricing  301
+/services /#services 301
+

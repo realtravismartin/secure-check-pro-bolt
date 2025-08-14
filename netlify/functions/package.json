@@ -1,0 +1,9 @@
+{
+  "name": "netlify-functions",
+  "version": "1.0.0",
+  "description": "Netlify serverless functions for dispute resolution platform",
+  "dependencies": {
+    "stripe": "^14.9.0"
+  }
+}
+

@@ -5,6 +5,7 @@ import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 import { Label } from './ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { apiEndpoints } from '../lib/api'
 
 export default function ContactForm({ onClose }) {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function ContactForm({ onClose }) {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [caseId, setCaseId] = useState('')
 
   const handleChange = (e) => {
     setFormData({
@@ -28,20 +30,21 @@ export default function ContactForm({ onClose }) {
     setIsSubmitting(true)
 
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Submit to Netlify function
+      const response = await apiEndpoints.submitContactForm(formData)
       
-      // Here you would typically send the data to your API
-      console.log('Form submitted:', formData)
-      
+      console.log('Contact form submitted successfully:', response)
+      setCaseId(response.caseId || 'CASE-' + Date.now().toString(36).toUpperCase())
       setIsSubmitted(true)
       
       // Auto-close after success
       setTimeout(() => {
         onClose()
-      }, 3000)
+      }, 4000)
     } catch (error) {
       console.error('Form submission failed:', error)
+      // You could show an error message here
+      alert('Failed to submit form. Please try again or call us directly at (555) 012-3456.')
     } finally {
       setIsSubmitting(false)
     }
@@ -73,12 +76,20 @@ export default function ContactForm({ onClose }) {
             <div className="text-center py-8">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Message Sent!</h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-sm mb-4">
                 We'll review your case and get back to you within 24 hours.
               </p>
+              {caseId && (
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="text-sm font-medium text-blue-900">Reference ID:</p>
+                  <p className="text-sm text-blue-700">{caseId}</p>
+                </div>
+              )}
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" name="contact" method="POST" data-netlify="true">
+              <input type="hidden" name="form-name" value="contact" />
+              
               <div>
                 <Label htmlFor="name">Full Name *</Label>
                 <Input

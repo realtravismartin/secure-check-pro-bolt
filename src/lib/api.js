@@ -2,8 +2,8 @@ import axios from 'axios'
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_URL || '/.netlify/functions',
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -35,30 +35,57 @@ api.interceptors.response.use(
   }
 )
 
-// API endpoints
+// API endpoints for Netlify functions
 export const apiEndpoints = {
-  // Payment endpoints
-  createPaymentIntent: (data) => api.post('/payments/create-payment-intent', data),
-  confirmPayment: (data) => api.post('/payments/confirm-payment', data),
+  // Payment endpoints (Netlify functions)
+  createPaymentIntent: (data) => api.post('/create-payment-intent', data),
+  confirmPayment: (data) => api.post('/confirm-payment', data),
   
-  // Case management endpoints
-  createCase: (data) => api.post('/trello/create-case', data),
-  updateCaseStatus: (data) => api.post('/trello/update-case-status', data),
-  addCaseNote: (data) => api.post('/trello/add-case-note', data),
+  // Contact form (Netlify function)
+  submitContactForm: (data) => api.post('/contact-form', data),
   
-  // Video proposal endpoints
-  createVideoProposal: (data) => api.post('/video/create-proposal', data),
-  getVideoAnalytics: () => api.get('/video/analytics'),
-  trackVideoEngagement: (id, data) => api.post(`/video/track/${id}`, data),
+  // Case management endpoints (would need backend implementation)
+  createCase: (data) => api.post('/create-case', data),
+  updateCaseStatus: (data) => api.post('/update-case-status', data),
+  addCaseNote: (data) => api.post('/add-case-note', data),
+  getCaseDetails: (caseId) => api.get(`/case/${caseId}`),
   
-  // Lead generation endpoints
-  startLeadMonitoring: () => api.post('/leads/monitor/start'),
-  getLeads: (params) => api.get('/leads/leads', { params }),
-  qualifyLead: (id, data) => api.post(`/leads/leads/${id}/qualify`, data),
-  getLeadAnalytics: () => api.get('/leads/analytics'),
+  // Video proposal endpoints (would need backend implementation)
+  createVideoProposal: (data) => api.post('/create-video-proposal', data),
+  getVideoAnalytics: () => api.get('/video-analytics'),
+  trackVideoEngagement: (id, data) => api.post(`/track-video/${id}`, data),
   
-  // Contact form
-  submitContactForm: (data) => api.post('/contact/submit', data),
+  // Lead generation endpoints (would need backend implementation)
+  startLeadMonitoring: () => api.post('/start-lead-monitoring'),
+  getLeads: (params) => api.get('/leads', { params }),
+  qualifyLead: (id, data) => api.post(`/qualify-lead/${id}`, data),
+  getLeadAnalytics: () => api.get('/lead-analytics'),
+}
+
+// Netlify Forms API (alternative to serverless functions for simple forms)
+export const submitNetlifyForm = async (formName, formData) => {
+  const form = new FormData()
+  form.append('form-name', formName)
+  
+  Object.keys(formData).forEach(key => {
+    form.append(key, formData[key])
+  })
+
+  try {
+    const response = await fetch('/', {
+      method: 'POST',
+      body: form
+    })
+    
+    if (!response.ok) {
+      throw new Error('Form submission failed')
+    }
+    
+    return { success: true, message: 'Form submitted successfully' }
+  } catch (error) {
+    console.error('Netlify form submission error:', error)
+    throw error
+  }
 }
 
 export default api

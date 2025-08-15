@@ -16,11 +16,11 @@ Your dispute resolution platform is now fully optimized for bolt.new deployment!
 
 3. **Configure Environment Variables**
    ```env
-   VITE_STRIPE_PUBLISHABLE_KEY=
+   VITE_STRIPE_PUBLISHABLE_KEY=pk_live_51QdJI0I7qpKXaqXwCCx5D0tC7gUvKpElsWWTz6x3ZDxWT5WwfR7oltBxSH3l8K98GoS8ob99GZNR9YdHOceif6cK00zN25gvn6
    VITE_API_URL=https://your-backend-api.vercel.app
-   VITE_CALENDLY_URL=https://calendly.com/your-username
+   VITE_CALENDLY_URL=https://calendly.com/travisjmartin
    VITE_SUPPORT_EMAIL=travis@disputeresolve.pro
-   VITE_SUPPORT_PHONE=(555) 012-3456
+   VITE_SUPPORT_PHONE=(303) 913-6408
    ```
 
 4. **Deploy**

@@ -16,7 +16,7 @@ Your dispute resolution platform is now fully optimized for bolt.new deployment!
 
 3. **Configure Environment Variables**
    ```env
-   VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_key_here
+   VITE_STRIPE_PUBLISHABLE_KEY=
    VITE_API_URL=https://your-backend-api.vercel.app
    VITE_CALENDLY_URL=https://calendly.com/your-username
    VITE_SUPPORT_EMAIL=travis@disputeresolve.pro

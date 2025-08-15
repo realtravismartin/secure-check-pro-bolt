@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../lib/auth'
 import { 
   Shield, 
   Clock, 
@@ -20,10 +21,11 @@ import {
 } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import SubscriptionStatus from '../components/SubscriptionStatus'
 import ContactForm from '../components/ContactForm'
-import PaymentButton from '../components/PaymentButton'
 
 export default function HomePage() {
+  const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [showContactForm, setShowContactForm] = useState(false)
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
@@ -66,6 +68,11 @@ export default function HomePage() {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/')
+  }
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -79,7 +86,7 @@ export default function HomePage() {
             
             <nav className="hidden md:flex space-x-8">
               <button onClick={() => scrollToSection('how-it-works')} className="text-gray-700 hover:text-blue-600 font-medium">How It Works</button>
-              <button onClick={() => scrollToSection('pricing')} className="text-gray-700 hover:text-blue-600 font-medium">Pricing</button>
+              <Link to="/pricing" className="text-gray-700 hover:text-blue-600 font-medium">Pricing</Link>
               <button onClick={() => scrollToSection('testimonials')} className="text-gray-700 hover:text-blue-600 font-medium">Success Stories</button>
               <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-blue-600 font-medium">Contact</button>
             </nav>
@@ -89,7 +96,20 @@ export default function HomePage() {
                 <Phone className="w-4 h-4" />
                 <span>(555) 012-3456</span>
               </div>
-              <PaymentButton size="sm">Get Started</PaymentButton>
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-600">Welcome, {user.email}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <Link to="/login"><Button size="sm">Sign In</Button></Link>
+              )}
             </div>
           </div>
         </div>
@@ -98,6 +118,13 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* User Subscription Status */}
+          {user && (
+            <div className="mb-8 flex justify-center">
+              <SubscriptionStatus />
+            </div>
+          )}
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               {/* Attention-Grabbing Badge */}
@@ -147,9 +174,9 @@ export default function HomePage() {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <PaymentButton size="lg" className="text-lg px-8 py-4">
+                <Link to="/pricing"><Button size="lg" className="text-lg px-8 py-4">
                   🚀 Get My Money Back Now - $497
-                </PaymentButton>
+                </Button></Link>
                 <Button 
                   variant="outline" 
                   size="lg" 
@@ -277,9 +304,9 @@ export default function HomePage() {
             <p className="text-lg text-gray-600 mb-8">
               What if you had a professional advocate who knows exactly how to get companies to pay attention?
             </p>
-            <PaymentButton size="lg" className="text-lg px-8 py-4">
+            <Link to="/pricing"><Button size="lg" className="text-lg px-8 py-4">
               Yes! Get My Money Back Now
-            </PaymentButton>
+            </Button></Link>
           </div>
         </div>
       </section>
@@ -438,9 +465,9 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-12">
-            <PaymentButton size="lg" className="text-lg px-8 py-4">
+            <Link to="/pricing"><Button size="lg" className="text-lg px-8 py-4">
               Start My Case Now - Only $497
-            </PaymentButton>
+            </Button></Link>
             <p className="text-sm text-gray-600 mt-4">
               + 15% of recovered funds (only if we win)
             </p>
@@ -502,16 +529,16 @@ export default function HomePage() {
                 We've recovered over $4.2 million for people just like you. 
                 Your case could be next.
               </p>
-              <PaymentButton size="lg" className="text-lg px-8 py-4">
+              <Link to="/pricing"><Button size="lg" className="text-lg px-8 py-4">
                 Get My Money Back Too!
-              </PaymentButton>
+              </Button></Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -520,6 +547,12 @@ export default function HomePage() {
             <p className="text-xl text-gray-600">
               No hourly fees. No retainers. We only win when you win.
             </p>
+          </div>
+          
+          <div className="text-center mb-8">
+            <Link to="/pricing">
+              <Button size="lg" className="text-lg px-8 py-4">View All Plans & Services</Button>
+            </Link>
           </div>
 
           <div className="max-w-lg mx-auto">
@@ -570,9 +603,9 @@ export default function HomePage() {
                 </div>
                 
                 <div className="pt-6">
-                  <PaymentButton className="w-full text-lg py-4">
+                  <Link to="/pricing"><Button className="w-full text-lg py-4">
                     🚀 Start My Case Now - $497
-                  </PaymentButton>
+                  </Button></Link>
                 </div>
                 
                 <div className="text-center text-sm text-gray-600">
@@ -626,9 +659,9 @@ export default function HomePage() {
               and what we can recover for you - no obligation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <PaymentButton size="lg" className="text-lg px-8 py-4">
+              <Link to="/pricing"><Button size="lg" className="text-lg px-8 py-4">
                 Start My Case - $497
-              </PaymentButton>
+              </Button></Link>
               <Button 
                 variant="outline" 
                 size="lg" 
@@ -722,9 +755,9 @@ export default function HomePage() {
                   <div className="text-sm">or</div>
                 </div>
                 
-                <PaymentButton className="w-full py-4 text-lg">
+                <Link to="/pricing"><Button className="w-full py-4 text-lg">
                   Start My Case Now - $497
-                </PaymentButton>
+                </Button></Link>
               </div>
               
               <div className="mt-6 text-center text-sm text-gray-600">

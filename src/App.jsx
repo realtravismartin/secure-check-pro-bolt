@@ -1,25 +1,30 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { Elements } from '@stripe/react-stripe-js'
-import { stripePromise } from './lib/stripe'
+import { AuthProvider } from './lib/auth'
 import HomePage from './pages/HomePage'
-import PaymentPage from './pages/PaymentPage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import PricingPage from './pages/PricingPage'
+import SuccessPage from './pages/SuccessPage'
 import ThankYouPage from './pages/ThankYouPage'
 import AdminDashboard from './pages/AdminDashboard'
 import './App.css'
 
 function App() {
   return (
-    <Elements stripe={stripePromise}>
+    <AuthProvider>
       <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/success" element={<SuccessPage />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
-    </Elements>
+    </AuthProvider>
   )
 }
 
